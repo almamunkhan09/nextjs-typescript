@@ -20,7 +20,10 @@ export default function AlertDialog() {
   //   setOpen(true);
   // };
 
-  const handleClose = (event: any, reason: any): void => {
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
     if (reason && reason === 'backdropClick') setOpen(true);
     else setOpen(false);
   };
