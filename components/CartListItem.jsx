@@ -10,13 +10,16 @@ import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { type } from 'os';
 import * as React from 'react';
 
-type props = {
-  title: string;
-  pricePerUnit: number;
-  count: number;
-};
-
-export default function CartListItem({ title, pricePerUnit, count }: props) {
+export default function CartListItem({
+  id,
+  title,
+  pricePerUnit,
+  count,
+  removeItem,
+  addOne,
+  removeOne,
+  maxAmount,
+}) {
   return (
     <Stack
       maxWidth="md"
@@ -38,13 +41,31 @@ export default function CartListItem({ title, pricePerUnit, count }: props) {
         <Grid xs={6}>{title}</Grid>
         <Grid xs={4} justifyContent="center" display="flex">
           <Stack direction="row" justifyContent="flex-end" alignItems="center">
-            <IconButton color="error">
+            <IconButton
+              color="error"
+              onClick={() => {
+                if (count > 1) {
+                  removeOne(id);
+                } else {
+                  alert('Reched Minimum Amount');
+                }
+              }}
+            >
               <RemoveIcon />
             </IconButton>
             <Typography variant="button" fontWeight="bold">
               {count}
             </Typography>
-            <IconButton color="primary">
+            <IconButton
+              color="primary"
+              onClick={() => {
+                if (count < maxAmount) {
+                  addOne(id);
+                } else {
+                  alert('You reached maximum amount for this Item');
+                }
+              }}
+            >
               <AddIcon />
             </IconButton>
           </Stack>
@@ -63,7 +84,14 @@ export default function CartListItem({ title, pricePerUnit, count }: props) {
               {count * pricePerUnit}
             </Typography>
 
-            <IconButton color="error" size="small">
+            <IconButton
+              color="error"
+              size="small"
+              onClick={() => {
+                console.log(id);
+                removeItem(id);
+              }}
+            >
               <DeleteIcon />
             </IconButton>
           </Stack>

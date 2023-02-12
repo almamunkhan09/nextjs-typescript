@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, Divider, Grid, Stack, Typography } from '@mui/material';
 import { border } from '@mui/system';
 
