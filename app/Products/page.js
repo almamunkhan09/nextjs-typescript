@@ -54,7 +54,7 @@ export default function ProductCard() {
       <Grid container spacing={2}>
         {products.map((item) => {
           return (
-            <Grid key={item.id} xs={6} md={4} p={2}>
+            <Grid key={item.id} xs={6} p={2}>
               <Link
                 href={`/Products/${item.id}`}
                 style={{ textDecoration: 'none' }}

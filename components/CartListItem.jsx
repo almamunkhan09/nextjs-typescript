@@ -88,7 +88,6 @@ export default function CartListItem({
               color="error"
               size="small"
               onClick={() => {
-                console.log(id);
                 removeItem(id);
               }}
             >
