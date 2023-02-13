@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import Link from 'next/link';
+import { useState } from 'react';
 
 const products = [
   {
@@ -53,7 +54,7 @@ export default function ProductCard() {
       <Grid container spacing={2}>
         {products.map((item) => {
           return (
-            <Grid key={item.id} xs={6} md={4} xl={4} sx={{ padding: '20px' }}>
+            <Grid key={item.id} xs={6} md={4} p={2}>
               <Link
                 href={`/Products/${item.id}`}
                 style={{ textDecoration: 'none' }}

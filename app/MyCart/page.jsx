@@ -1,9 +1,9 @@
 'use client';
 
 import { Box, List, ListItem, Stack, Typography } from '@mui/material';
+import Cookies from 'js-cookie';
 import { useState } from 'react';
 import CartListItem from '../../components/CartListItem';
-import TableCart from '../../components/TableCart';
 
 export default function Cart() {
   const demoCartList = [
@@ -24,7 +24,10 @@ export default function Cart() {
       maxAmount: 5,
     },
   ];
-  const [cartList, setCartList] = useState(demoCartList);
+  const isCookieExist = Cookies.get('myCart')
+    ? JSON.parse(Cookies.get('myCart'))
+    : [];
+  const [cartList, setCartList] = useState([...isCookieExist]);
   const removeItem = (id) => {
     const newCart = cartList.filter((item) => !(item.id === id));
     console.log(newCart);

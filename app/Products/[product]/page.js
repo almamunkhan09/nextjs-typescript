@@ -1,15 +1,7 @@
 'use client';
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Paper,
-  Stack,
-  Typography,
-} from '@mui/material';
-import { width } from '@mui/system';
-import Image from 'next/image';
+import { Box, Button, Grid, Paper, Stack, Typography } from '@mui/material';
+import Cookies from 'js-cookie';
+import { useState } from 'react';
 
 const products = [
   {
@@ -19,6 +11,7 @@ const products = [
     description:
       'Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday',
     image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+    stock: 5,
   },
   {
     id: 2,
@@ -28,6 +21,7 @@ const products = [
       'Slim-fitting style, contrast raglan long sleeve, three-button henley placket, light weight & soft fabric for breathable and comfortable wearing. And Solid stitched shirts with round neck made for durability and a great fit for casual fashion wear and diehard baseball fans. The Henley style round neckline includes a three-button placket.',
     image:
       'https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg',
+    stock: 3,
   },
   {
     id: 3,
@@ -36,6 +30,7 @@ const products = [
     description:
       'great outerwear jackets for Spring/Autumn/Winter, suitable for many occasions, such as working, hiking, camping, mountain/rock climbing, cycling, traveling or other outdoors. Good gift choice for you or your family member. A warm hearted love to Father, husband or son in this thanksgiving or Christmas Day.',
     image: 'https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg',
+    stock: 4,
   },
   {
     id: 4,
@@ -44,15 +39,55 @@ const products = [
     description:
       'The color could be slightly different between on the screen and in practice. / Please note that body builds vary by person, therefore, detailed size information should be reviewed below on the product description.',
     image: 'https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_.jpg',
+    stock: 10,
   },
 ];
 
+const addTocart = (singleProduct, cart, setCart) => {
+  const newItem = {
+    id: singleProduct.id,
+    productTitle: singleProduct.title,
+    pricePerUnit: singleProduct.price,
+    count: 1,
+    maxAmount: singleProduct.stock,
+  };
+  const newCart = [...cart, newItem];
+  Cookies.set('myCart', JSON.stringify(newCart));
+  setCart((preValue) => [...preValue, newItem]);
+};
+
+const addMoreItem = (singleProduct, cart, setCart) => {
+  const newCart = [...cart];
+  newCart.find((element) => element.id === singleProduct.id).count <
+  singleProduct.stock
+    ? (newCart.find((element) => element.id === singleProduct.id).count += 1)
+    : alert('Maximum Amount Reached');
+
+  // const matchFunction = (element) => element.id === product.id;
+  // const indexOfItem = cartList.findIndex(matchFunction);
+  // console.log(indexOfItem);
+  setCart(newCart);
+  Cookies.set('myCart', JSON.stringify(newCart));
+};
+
+const clickHandler = (singleProduct, cart, setCart) => {
+  cart.find((element) => element.id === singleProduct.id)
+    ? addMoreItem(singleProduct, cart, setCart)
+    : addTocart(singleProduct, cart, setCart);
+};
+
 export default function product({ params }) {
-  console.log(params);
+  const isCookieExist = Cookies.get('myCart')
+    ? JSON.parse(Cookies.get('myCart'))
+    : [];
+  const [myCart, setMyCart] = useState([...isCookieExist]);
+  console.log(myCart);
+  // console.log(params);
   const [singleItem] = products.filter(
     (element) => element.id === parseInt(params.product),
   );
-  console.log(singleItem);
+  // console.log(singleItem);
+
   return (
     <Box
       height="80vh"
@@ -108,7 +143,12 @@ export default function product({ params }) {
                 {' '}
                 <Typography variant="h4"> ${singleItem.price}</Typography>{' '}
               </Button>
-              <Button variant="contained">Add to Cart</Button>
+              <Button
+                variant="contained"
+                onClick={() => clickHandler(singleItem, myCart, setMyCart)}
+              >
+                Add to Cart
+              </Button>
             </Stack>
           </Paper>
         </Grid>
